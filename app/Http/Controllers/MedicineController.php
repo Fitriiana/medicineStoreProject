@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Medicine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class MedicineController extends Controller
@@ -16,24 +17,6 @@ class MedicineController extends Controller
      */
     public function index()
     {
-        // 2. Tampilkan seluruh nama medecines, formula dan harga
-        // $listmedicines = DB::table('medicines')->select('generic_name', 'restriction_formula', 'price')->get();
-
-        // Eloquent
-        $listmedicines = Medicine::get(['generic_name', 'restriction_formula', 'price']);
-        // return view('medicine.list_medicine_oneform', compact('nama_obat_oneform'));
-
-        // 1. Tampilkan seluruh nama medecines, formula dan nama kategori
-        // DB QUERY
-        // $list_fromobat_namakategori = DB::table('medicines')->join('categories', 'medicines.category_id', '=', 'categories.id')->select('medicines.generic_name', 'medicines.restriction_formula', 'categories.name')->get();
-
-        // eloquent
-        $list_fromobat_namakategori = Medicine::join('categories', 'medicines.category_id', '=', 'categories.id')
-            ->select('medicines.generic_name', 'medicines.restriction_formula', 'categories.name')
-            ->get();
-
-
-
         // nomor 1. Tampilan jumlah kategori yang memiliki data medicines 
         // $jumlahkategori = DB::table('medicines')->distinct()->count('category_id');
         // eloquent
@@ -84,7 +67,8 @@ class MedicineController extends Controller
      */
     public function create()
     {
-        //
+        $dataCategory = Category::all();
+        return view('medicine.create', compact('dataCategory'));
     }
 
     /**
@@ -95,7 +79,21 @@ class MedicineController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Medicine();
+        $data->generic_name = $request->get('genericName');
+        $data->form = $request->get('formula');
+        $data->restriction_formula = $request->get('restrictionForm');
+        $data->price = $request->get('price');
+        $data->description = $request->get('description');
+
+        $data->category_id = $request->get('categoryID');
+
+        $data->faskes1 = $request->get('faskes1');
+        $data->faskes2 = $request->get('faskes2');
+        $data->faskes3 = $request->get('faskes3');
+
+        $data->save();
+        return redirect()->route('reportlistallmedicines')->with('status', 'Medicine is added');
     }
 
     /**
@@ -104,6 +102,7 @@ class MedicineController extends Controller
      * @param  \App\Medicine  $medicine
      * @return \Illuminate\Http\Response
      */
+
     public function show($medicine)
     {
         //select * form medicine where id = 1
@@ -119,7 +118,7 @@ class MedicineController extends Controller
 
         // dd($result);
         // parsing
-        return view('medicine.show', compact('messages'));
+        // return view('medicine.show', compact('messages'));
     }
 
     /**
@@ -128,9 +127,11 @@ class MedicineController extends Controller
      * @param  \App\Medicine  $medicine
      * @return \Illuminate\Http\Response
      */
-    public function edit(Medicine $medicine)
+    public function edit($medicine)
     {
-        //
+        $data = Medicine::find($medicine);
+        $dataCategory = Category::all();
+        return view('medicine.editMedicine', compact('data', 'dataCategory'));
     }
 
     /**
@@ -154,5 +155,45 @@ class MedicineController extends Controller
     public function destroy(Medicine $medicine)
     {
         //
+    }
+    public function showall()
+    {
+        $obat = Medicine::all();
+        return view('medicine.show_jquery', compact('obat'));
+    }
+    public function showmedicines()
+    {
+        // 2. Tampilkan seluruh nama medecines, formula dan harga
+        // $listmedicines = DB::table('medicines')->select('generic_name', 'restriction_formula', 'price')->get();
+
+        // Eloquent
+        $listmedicines = Medicine::get(['generic_name', 'form', 'price']);
+        return view('medicine.show_medicines', compact('listmedicines'));
+    }
+    public function showlistMedicines()
+    {
+        $obat = Medicine::all();
+        return view('medicine.index', compact('obat'));
+    }
+    public function shownamekategori()
+    {
+        // 1. Tampilkan seluruh nama medecines, formula dan nama kategori
+        // DB QUERY
+        // $list_fromobat_namakategori = DB::table('medicines')->join('categories', 'medicines.category_id', '=', 'categories.id')->select('medicines.generic_name', 'medicines.restriction_formula', 'categories.name')->get();
+
+        // eloquent
+        $list_fromobat_namakategori = Medicine::join('categories', 'medicines.category_id', '=', 'categories.id')
+            ->select('medicines.generic_name', 'medicines.restriction_formula', 'categories.name')
+            ->get();
+        return view('medicine.show_kategori_medicines', compact('list_fromobat_namakategori'));
+    }
+    public function showInfo()
+    {
+        $result = Medicine::orderBy('price', 'DESC')->first();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => "<div class='alert alert-info'>
+             Did you know? The most expensive medicines is " . $result->generic_name . "</div>"
+        ), 200);
     }
 }

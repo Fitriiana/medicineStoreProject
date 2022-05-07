@@ -16,9 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // // 1. tampilkan seluruh data kategori obat
-        // $kategori = DB::table('categories')->get();
-        // eloquent 
+
         $kategori = Category::all();
 
         // // 2. Tampilkan nama kategori yang tidak memiliki data medicines satupun
@@ -46,7 +44,7 @@ class CategoryController extends Controller
         //     ->groupBy('categories.id')
         //     ->get();
         // dd($rerataharga);
-        return view('category.list_avg_price', compact('rerataharga'));
+        return view('category.listkategori', compact('kategori'));
 
         // nomor 4
         // $kategoriobat = DB::table('categories')
@@ -70,7 +68,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view("category.create");
     }
 
     /**
@@ -81,7 +79,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = new Category();
+        $data->name = $request->get('nameCategory');
+        $data->description = $request->get('description');
+        // untuk getnya itu bukan yang bersifat get/post methodnya itu hanya berfungsi untuk ambil aja
+        $data->save();
+        return redirect()->route('reportallcategory')->with('status', 'Category is added');
     }
 
     /**
@@ -101,9 +104,10 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit($category)
     {
-        //
+        $data = Category::find($category);
+        return view('category.edit', compact('data'));
     }
 
     /**
@@ -113,9 +117,13 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $category)
     {
-        //
+        $data = Category::find($category);
+        $data->name = $request->get('nameCategory');
+        $data->description = $request->get('description');
+        $data->save();
+        return redirect()->route('reportallcategory')->with('status', 'Category is changed');
     }
 
     /**
@@ -124,9 +132,25 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($category)
     {
-        //
+        $data = Category::find($category);
+        try {
+            $data->delete();
+            return redirect()->route('reportallcategory')->with('status', 'Category is success to Delete');
+        } catch (\PDOException $e) {
+            $msg = "Data Gagal Dihapus. Pastikan data child sudah hilang atau tidak berhubungan";
+
+            return redirect()->route('reportallcategory')->with('error', $msg);
+        }
+    }
+    public function showall()
+    {
+        // // 1. tampilkan seluruh data kategori obat
+        // $kategori = DB::table('categories')->get();
+        // eloquent 
+        $kategori = Category::all();
+        return view('category.listkategori', compact('kategori'));
     }
     public function showlist($id_category)
     {
