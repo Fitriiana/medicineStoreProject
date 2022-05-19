@@ -141,9 +141,23 @@ class MedicineController extends Controller
      * @param  \App\Medicine  $medicine
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Medicine $medicine)
+    public function update(Request $request, $medicine)
     {
-        //
+        $data = Medicine::find($medicine);
+        $data->generic_name = $request->get('genericName');
+        $data->form = $request->get('formula');
+        $data->restriction_formula = $request->get('restrictionForm');
+        $data->price = $request->get('price');
+        $data->description = $request->get('description');
+
+        $data->category_id = $request->get('categoryID');
+
+        $data->faskes1 = $request->get('faskes1');
+        $data->faskes2 = $request->get('faskes2');
+        $data->faskes3 = $request->get('faskes3');
+
+        $data->save();
+        return redirect()->route('reportlistallmedicines')->with('status', 'Medicine is changed');
     }
 
     /**
@@ -152,9 +166,17 @@ class MedicineController extends Controller
      * @param  \App\Medicine  $medicine
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Medicine $medicine)
+    public function destroy($medicine)
     {
-        //
+        $data = Medicine::find($medicine);
+        try {
+            $data->delete();
+            return redirect()->route('reportlistallmedicines')->with('status', ',Medicines is success to Delete');
+        } catch (\PDOException $e) {
+            $msg = "Data Gagal Dihapus. Pastikan data child sudah hilang atau tidak berhubungan";
+
+            return redirect()->route('reportallcategory')->with('error', $msg);
+        }
     }
     public function showall()
     {

@@ -34,7 +34,7 @@
 
   <div>
     <label for="inputFaskes1">Faskes 1: </label>
-    @if ($data->faskes1 === "1")
+    @if ($data->faskes1 === 1)
       <input type="radio" id="faskesTrue1" name="faskes1" value="1" checked>
       <label for="faskesTrue1">True</label>
       <input type="radio" id="faskesfalse1" name="faskes1" value="0">
@@ -49,7 +49,7 @@
   
   <div>
     <label for="inputFaskes2">Faskes 2: </label>
-    @if ($data->faskes1 === "1")
+  @if ($data->faskes2 === 1)
     <input type="radio"id="faskesTrue2" name="faskes2" value="1" checked>
     <label for="faskesTrue2">True</label>
     <input type="radio" id="faskesfalse2" name="faskes2" value="0">
@@ -64,10 +64,17 @@
 
   <div>
     <label for="inputFaskes3">Faskes 3: </label>
-    <input type="radio" id="faskesTrue3" name="faskes3" value="1">
-    <label for="faskesTrue3">True</label>
-    <input type="radio" id="faskesfalse3" name="faskes3" value="0">
-    <label for="faskesFalse3">False</label><br>
+    @if ($data->faskes3 === 1)
+      <input type="radio" id="faskesTrue3" name="faskes3" value="1" checked>
+      <label for="faskesTrue3">True</label>
+      <input type="radio" id="faskesfalse3" name="faskes3" value="0">
+      <label for="faskesFalse3">False</label><br>
+    @else
+      <input type="radio" id="faskesTrue3" name="faskes3" value="1">
+      <label for="faskesTrue3">True</label>
+      <input type="radio" id="faskesfalse3" name="faskes3" value="0" checked>
+      <label for="faskesFalse3">False</label><br>
+    @endif
   </div><br><br>
 
 
