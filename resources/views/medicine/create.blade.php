@@ -1,4 +1,4 @@
-@extends('layout.conquer')
+@extends('layouts.conquer')
 
 @section('content')
 <form method="POST" action="{{route('medicine.store')}}">

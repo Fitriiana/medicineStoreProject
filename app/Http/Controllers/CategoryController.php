@@ -152,6 +152,7 @@ class CategoryController extends Controller
         $kategori = Category::all();
         return view('category.listkategori', compact('kategori'));
     }
+
     public function showlist($id_category)
     {
         $data  = Category::find($id_category);
@@ -165,5 +166,55 @@ class CategoryController extends Controller
 
 
         return view('report.list_medicine_by_category', compact('id_category', 'namecategory', 'result', 'gettotaldata'));
+    }
+    // week 11
+    public function getEditForm(Request $request)
+    {
+        $id = $request->get('id');
+        $data = Category::find($id);
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('category.getEditForm', compact('data'))->render()
+        ), 200);
+    }
+
+    public function getEditForm2(Request $request)
+    {
+        $id = $request->get('id');
+        $data = Category::find($id);
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('category.getEditForm2', compact('data'))->render()
+        ), 200);
+    }
+
+    public function saveData(Request $request)
+    {
+        $id = $request->get('id');
+        $category = Category::find($id);
+        $category->name = $request->get('name');
+        $category->description = $request->get('description');
+        $category->save();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'Category data updated'
+        ), 200);
+    }
+    public function deleteData(Request $request)
+    {
+        try {
+            $id = $request->get('id');
+            $category = Category::find($id);
+            $category->delete();
+            return response()->json(array(
+                'status' => 'oke',
+                'msg' => 'Category data is deleted'
+            ), 200);
+        } catch (\PDOException $e) {
+            return response()->json(array(
+                'status' => 'gagal',
+                'msg' => 'cant deleted Category data '
+            ), 200);
+        }
     }
 }

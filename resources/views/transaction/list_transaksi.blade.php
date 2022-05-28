@@ -1,4 +1,4 @@
-@extends('layout.conquer')
+@extends('layouts.conquer')
 
 @section('content')
 {{-- WEEK 8 --}}

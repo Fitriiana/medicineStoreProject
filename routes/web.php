@@ -18,6 +18,9 @@ Route::get('/', function () {
 });
 Route::resource('medicine', 'MedicineController');
 Route::resource('kategori', 'CategoryController');
+
+
+
 // Route::resource('transaction', 'TransactionController');
 Route::get('report/listmedicine/{id}', 'CategoryController@showlist')->name('reportshowmedicine');
 
@@ -30,5 +33,20 @@ Route::post('medicines/showInfo', 'MedicineController@showInfo')->name('medicine
 Route::get('transactions/listalltransaction', 'TransactionController@index')->name('listtransactions');
 Route::post('transaction/showDataAjax', 'TransactionController@showAjax')->name('transaction.showAjax');
 
-
 Route::get('medicines/listallmedicine', 'MedicineController@showlistMedicines')->name('reportlistallmedicines');
+
+// WEEK 11
+Route::post('/categories/getEditForm', 'CategoryController@getEditForm')->name('category.getEditForm');
+Route::post('/categories/getEditForm2', 'CategoryController@getEditForm2')->name('category.getEditForm2');
+Route::post('/categories/saveData', 'CategoryController@saveData')->name('category.saveData');
+Route::post('/categories/deleteData', 'CategoryController@deleteData')->name('category.deleteData');
+
+// Medicine Week 11
+Route::post('/obat/getEditForm', 'MedicineController@getEditForm')->name('medicine.getEditForm');
+Route::post('/obat/getEditForm2', 'MedicineController@getEditForm2')->name('medicine.getEditForm2');
+Route::post('/obat/saveData', 'MedicineController@saveData')->name('medicine.saveData');
+Route::post('/obat/deleteData', 'MedicineController@deleteData')->name('medicine.deleteData');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

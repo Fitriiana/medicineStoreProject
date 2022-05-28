@@ -195,7 +195,8 @@ class MedicineController extends Controller
     public function showlistMedicines()
     {
         $obat = Medicine::all();
-        return view('medicine.index', compact('obat'));
+        $dataKategori = Category::all();
+        return view('medicine.index', compact('obat', 'dataKategori'));
     }
     public function shownamekategori()
     {
@@ -217,5 +218,69 @@ class MedicineController extends Controller
             'msg' => "<div class='alert alert-info'>
              Did you know? The most expensive medicines is " . $result->generic_name . "</div>"
         ), 200);
+    }
+
+
+    public function getEditForm(Request $request)
+    {
+        $id = $request->get('id');
+        $data = Medicine::find($id);
+        $dataCategory = Category::all();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('medicine.getEditForm', compact('data', 'dataCategory'))->render()
+        ), 200);
+    }
+
+    public function getEditForm2(Request $request)
+    {
+        $id = $request->get('id');
+        $data = Medicine::find($id);
+        $dataCategory = Category::all();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('medicine.getEditForm2', compact('data', 'dataCategory'))->render()
+        ), 200);
+    }
+
+    public function saveData(Request $request)
+    {
+        $id = $request->get('id');
+        $data = Medicine::find($id);
+
+        $data->generic_name = $request->get('genericName');
+        $data->form = $request->get('formula');
+        $data->restriction_formula = $request->get('restrictionForm');
+        $data->price = $request->get('price');
+        $data->description = $request->get('description');
+
+        $data->category_id = $request->get('categoryID');
+
+        $data->faskes1 = $request->get('faskes1');
+        $data->faskes2 = $request->get('faskes2');
+        $data->faskes3 = $request->get('faskes3');
+
+        $data->save();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'Category data updated'
+        ), 200);
+    }
+    public function deleteData(Request $request)
+    {
+        try {
+            $id = $request->get('id');
+            $data = Medicine::find($id);
+            $data->delete();
+            return response()->json(array(
+                'status' => 'oke',
+                'msg' => 'Medicine data is deleted'
+            ), 200);
+        } catch (\PDOException $e) {
+            return response()->json(array(
+                'status' => 'gagal',
+                'msg' => 'Medicine deleted Category data '
+            ), 200);
+        }
     }
 }
