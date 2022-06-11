@@ -169,6 +169,7 @@ class MedicineController extends Controller
     public function destroy($medicine)
     {
         $data = Medicine::find($medicine);
+        $this->authorize('delete-permission', $data);
         try {
             $data->delete();
             return redirect()->route('reportlistallmedicines')->with('status', ',Medicines is success to Delete');
@@ -282,5 +283,31 @@ class MedicineController extends Controller
                 'msg' => 'Medicine deleted Category data '
             ), 200);
         }
+    }
+    public function front_index()
+    {
+        $medicine = Medicine::all();
+        return view('frontend.product', compact('medicine'));
+    }
+
+    public function addToCart($id){
+        $m = Medicine::find($id);
+        $cart = session()->get('cart');
+        if (!isset($cart[$id])) {
+            $cart[$id] = [
+                "name" => $m ->generic_name,
+                "quantity" => 1,
+                "price"=> $m ->price
+            ];
+        }else{
+            $cart[$id]['quantity']++;
+        }
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('success', 'Medicine Added to cart succesfully');
+    }
+
+    public function cart(){
+        return view('frontend.cart');
     }
 }

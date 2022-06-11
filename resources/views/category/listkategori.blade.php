@@ -24,7 +24,7 @@
     
   </div>
 
-  {{--Start modal Create  --}}
+  {{--Start modal Create--}}
       <div class="modal fade" id="modalCreate" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content" >
@@ -100,8 +100,8 @@
         @foreach ($kategori as $li)
           <tr id="tr_{{$li->id}}">
             <td>{{ $li->id}}</td>
-            <td id="td_name_{{$li->id}}">{{ $li->name}}</td>
-            <td id="td_description_{{$li->id}}">{{ $li->description}}</td>
+            <td class="editable" id="td_name_{{$li->id}}">{{ $li->name}}</td>
+            <td class="editable" id="td_description_{{$li->id}}">{{ $li->description}}</td>
             <td>{{ $li->created_at}}</td>
             <td>{{ $li->updated_at}}</td>
             {{-- <td>
@@ -131,13 +131,16 @@
             </td>
 
             <td>
-              <form method="POST" action="{{url('kategori/'.$li->id)}}">
-              @csrf
-              @method("DELETE")
-            
-              <input type="submit" value="Delete" class="btn btn-danger btn-xs" onclick="if(!confirm('are you sure to delete this record')) return false;">
-              <a class="btn btn-danger btn-xs" onclick="if(confirm('apakah anda yakin??')) deleteDataRemoveTR({{$li->id}})">Delete 2</a>
-            </form></td>
+              @can('delete-permission', $li)
+                <form method="POST" action="{{url('kategori/'.$li->id)}}">
+                  @csrf
+                  @method("DELETE")
+                
+                  <input type="submit" value="Delete" class="btn btn-danger btn-xs" onclick="if(!confirm('are you sure to delete this record')) return false;">
+                  <a class="btn btn-danger btn-xs" onclick="if(confirm('apakah anda yakin??')) deleteDataRemoveTR({{$li->id}})">Delete 2</a>
+                </form>
+              @endcan
+            </td>
           </tr> 
         @endforeach
               
@@ -223,4 +226,32 @@
     });
   }
 </script>
+@endsection
+
+@section('initialscript')
+    <script>
+      $('.editable').editable({
+        closeOnEnter: true,
+        callback:function(data){
+          if(data.content){
+            var s_id= data.$el[0].id
+            var fname=s_id.split('_')[1]
+            var id=s_id.split('_')[2]
+
+            $.ajax({
+              type : 'POST',
+              url: '{{route('category.saveDataField')}}',
+              data:{'_token' :'<?php echo csrf_token() ?>',
+                  'id':id,
+                  'fname': fname,
+                  'value' : data.content
+                },
+              success: function(data){
+                alert(data.msg);
+              }
+            });
+          }
+        }
+      });
+    </script>
 @endsection

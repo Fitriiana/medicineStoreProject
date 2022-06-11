@@ -1,8 +1,12 @@
 @extends('layouts.conquer')
 
 @section('content')
-<form method="POST" action="{{route('kategori.store')}}">
+<form method="POST" action="{{route('kategori.store')}}" enctype="multipart/form-data" role="form">
   @csrf
+  <div class="form-group">
+    <label for="">LOGO</label>
+    <input type="file" class="form-control" id="logo" name="logo">
+  </div>
   <div class="mb-3">
     <label for="inputCategoryName" class="form-label">Category Name</label>
     <input type="text" class="form-control" id="inputCategoryName" name="nameCategory" requaired>

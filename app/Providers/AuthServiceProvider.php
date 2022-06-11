@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Facade\FlareClient\Http\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,6 +26,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('delete-permission', function ($user) {
+            return ($user->sebagai == 'owner');
+        });
+        Gate::define('checkmember', function ($user) {
+            return ($user->sebagai == 'member');
+        });
     }
 }

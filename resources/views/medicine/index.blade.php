@@ -180,13 +180,15 @@
                   <a href="#modalEdit" data-toggle="modal" class="btn btn-warning btn-xs" onclick="getEditForm2({{$li->id}})">+ Edit B</a>
                 </td>
                 <td>
-                  <form method="POST" action="{{url('medicine/'.$li->id)}}">
-                    @csrf
-                    @method("DELETE")
-                  
-                    <input type="submit" value="Delete" class="btn btn-danger btn-xs" onclick="if(!confirm('are you sure to delete this record')) return false;">
-                    <a class="btn btn-danger btn-xs" onclick="if(confirm('apakah anda yakin??')) deleteDataRemoveTR({{$li->id}})">Delete 2</a>
-                  </form>
+                  @can('delete-permission', $li)
+                    <form method="POST" action="{{url('medicine/'.$li->id)}}">
+                      @csrf
+                      @method("DELETE")
+                    
+                      <input type="submit" value="Delete" class="btn btn-danger btn-xs" onclick="if(!confirm('are you sure to delete this record')) return false;">
+                      <a class="btn btn-danger btn-xs" onclick="if(confirm('apakah anda yakin??')) deleteDataRemoveTR({{$li->id}})">Delete 2</a>
+                    </form>
+                  @endcan
                 </td>
             </tr>
         @endforeach

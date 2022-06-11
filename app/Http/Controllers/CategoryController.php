@@ -80,6 +80,14 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = new Category();
+
+        $file = $request->file('logo');
+        $imgFolder = 'images';
+        $imgFile = time()."_".$file->getClientOriginalName();
+        $file -> move($imgFolder, $imgFile);
+        $data->logo=$imgFile;
+
+
         $data->name = $request->get('nameCategory');
         $data->description = $request->get('description');
         // untuk getnya itu bukan yang bersifat get/post methodnya itu hanya berfungsi untuk ambil aja
@@ -135,6 +143,7 @@ class CategoryController extends Controller
     public function destroy($category)
     {
         $data = Category::find($category);
+        $this->authorize('delete-permission', $data);
         try {
             $data->delete();
             return redirect()->route('reportallcategory')->with('status', 'Category is success to Delete');
@@ -216,5 +225,21 @@ class CategoryController extends Controller
                 'msg' => 'cant deleted Category data '
             ), 200);
         }
+    }
+
+    public function saveDataField(Request $request)
+    {
+        $id = $request->get('id');
+        $fname = $request->get('fname');
+        $value = $request->get('value');
+
+        // dd($id);
+        $category = Category::find($id);
+        $category->$fname = $value;
+        $category->save();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'Category data updated'
+        ), 200);
     }
 }

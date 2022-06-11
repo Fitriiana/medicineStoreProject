@@ -46,7 +46,11 @@ License: You must have a valid license purchased only from themeforest(the above
 <link href="{{ asset('conquer2/css/custom.css')}}" rel="stylesheet" type="text/css"/>
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="favicon.ico"/>
+{{-- Javascript --}}
+
 @yield('javascript')
+
+{{-- End Java Script --}}
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -445,7 +449,10 @@ License: You must have a valid license purchased only from themeforest(the above
 					<li class="divider">
 					</li>
 					<li>
-						<a href="login.html"><i class="fa fa-key"></i> Log Out</a>
+						<form action="{{route('logout')}}" id="logout-form" method="POST" class="d-none">
+							@csrf
+							<i class="fa fa-key"></i> <input type="submit" class="btn btn-danger" value="Logout">
+						</form>
 					</li>
 				</ul>
 			</li>
@@ -607,6 +614,11 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{{ asset('conquer2/scripts/app.js')}}" type="text/javascript"></script>
 <script src="{{ asset('conquer2/scripts/index.js')}}" type="text/javascript"></script>
 <script src="{{ asset('conquer2/scripts/tasks.js')}}" type="text/javascript"></script>
+
+{{-- week 14 --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{{ asset('js/jquery.editable.min.js')}}" type="text/javascript"></script>
+
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
 jQuery(document).ready(function() {    
@@ -624,6 +636,7 @@ jQuery(document).ready(function() {
 });
 </script>
 <!-- END JAVASCRIPTS -->
+@yield('initialscript')
 </body>
 <!-- END BODY -->
 </html>
