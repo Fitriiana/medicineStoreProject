@@ -38,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/obat/getEditForm2', 'MedicineController@getEditForm2')->name('medicine.getEditForm2');
     Route::post('/obat/saveData', 'MedicineController@saveData')->name('medicine.saveData');
     Route::post('/obat/deleteData', 'MedicineController@deleteData')->name('medicine.deleteData');
+
+    // Week 14
+    Route::post('/medicines/saveDataField', 'MedicineController@saveDataField')->name('medicine.saveDataField');
+    Route::post('/medicines/changeLogo', 'MedicineController@changeLogo')->name('medicine.changeLogo');
 });
 
 // Categories
@@ -53,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/categories/deleteData', 'CategoryController@deleteData')->name('category.deleteData');
     // week 14
     Route::post('/categories/saveDataField', 'CategoryController@saveDataField')->name('category.saveDataField');
+    Route::post('/categories/changeLogo', 'CategoryController@changeLogo')->name('category.changeLogo');
 });
 
 // Transaction

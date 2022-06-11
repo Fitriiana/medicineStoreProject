@@ -73,6 +73,8 @@
     </div>
   </div>
 {{-- End Modal Edit A --}}
+
+
   @if (session('status'))
   <div class="alert alert-success">
     {{session('status')}}
@@ -121,6 +123,39 @@
                 </div>
               </div>
             </td> --}}
+
+            <td>
+               {{--Start Modal change Logo  --}}
+               <img src="{{asset('/images/'.$li->logo)}}" height="50px">
+                  <div class="modal fade" id="modalChange_{{$li->id}}" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content" id="modalContent">
+                        <form action="{{route('category.changeLogo')}}" method="POST" role="form" enctype="multipart/form-data">
+                          <div class="modal-header">
+                            <button type="button" class="close" 
+                              data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">Change Logo</h4>
+                          </div>
+
+                          <div class="modal-body">
+                            @csrf
+                            <div class="form-group">
+                              <label>Logo</label>
+                              <input type="file" class="form-control" id="logo" name="logo">
+                              <input type="hidden" id="id" name="id" value="{{$li->id}}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <br><a href="#modalChange_{{$li->id}}" data-toggle="modal" class="btn btn-xs btn-default">Change</a>
+                {{-- End Modal change Logo --}}
+            </td>
 
             <td>
               <a href="{{ url('kategori/'.$li->id.'/edit' )}}" class="btn btn-info btn-xs">Edit</a>

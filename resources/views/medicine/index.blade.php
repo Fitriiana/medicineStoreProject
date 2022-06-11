@@ -158,10 +158,10 @@
             
         <tr id="tr_{{$li->id}}">
               <td>{{$li->id}}</td>
-                <td>{{ $li->generic_name}}</td>
-                <td>{{ $li->form}}</td>
-                <td>{{ $li->restriction_formula}}</td>
-                <td>{{ $li->description}}</td>
+                <td class="editable" id="td_genericName_{{$li->id}}">{{ $li->generic_name}}</td>
+                <td class="editable" id="td_form_{{$li->id}}">{{ $li->form}}</td>
+                <td class="editable" id="td_formula_{{$li->id}}">{{ $li->restriction_formula}}</td>
+                <td class="editable" id="td_description_{{$li->id}}">{{ $li->description}}</td>
                 <td>{{ $li->category_id}}</td>
                 <td>{{ $li->price}}</td>
                 <td>{{ $li->faskes_TK1}}</td>
@@ -169,6 +169,39 @@
                 <td>{{ $li->faskes_TK3}}</td>
                 <td>{{ $li->created_at}}</td>
                 <td>{{ $li->updated_at}}</td>
+
+                <td>
+                    {{-- modal Change Logo --}}
+                  <img src="{{asset('/images/'.$li->logo)}}" height="50px">
+                  <div class="modal fade" id="modalChange_{{$li->id}}" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content" id="modalContent">
+                        <form action="{{route('medicine.changeLogo')}}" method="POST" role="form" enctype="multipart/form-data">
+                          <div class="modal-header">
+                            <button type="button" class="close" 
+                              data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">Change Logo</h4>
+                          </div>
+
+                          <div class="modal-body">
+                            @csrf
+                            <div class="form-group">
+                              <label>Logo</label>
+                              <input type="file" class="form-control" id="logo" name="logo">
+                              <input type="hidden" id="id" name="id" value="{{$li->id}}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <br><a href="#modalChange_{{$li->id}}" data-toggle="modal" class="btn btn-xs btn-default">Change</a>
+                  {{-- End Modal Change Logo --}}
+                </td>
 
                 <td>
                   <a href="{{ url('medicine/'.$li->id.'/edit' )}}" class="btn btn-xs btn-info">Edit</a>
@@ -198,6 +231,38 @@
 
 @endsection
 
+@section('initialscript')
+<script>
+   $('.editable').editable({
+        closeOnEnter: true,
+        callback:function(data){
+          if(data.content){
+            var s_id= data.$el[0].id
+            var fname=s_id.split('_')[1]
+            var id=s_id.split('_')[2]
+
+            if (fname == "genericName") {
+              fname = "generic_name"
+            }
+            // console.log(data.content);
+            $.ajax({
+              type : 'POST',
+              url: '{{route('medicine.saveDataField')}}',
+              data:{'_token' :'<?php echo csrf_token() ?>',
+                  'id':id,
+                  'fname': fname,
+                  'value' : data.content
+                },
+              success: function(data){
+                alert(data.msg);
+              }
+            });
+          }
+        }
+      });
+</script>
+    
+@endsection
 
 @section('javascript')
 <script>

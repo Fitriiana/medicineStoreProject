@@ -80,6 +80,14 @@ class MedicineController extends Controller
     public function store(Request $request)
     {
         $data = new Medicine();
+
+        $file = $request->file('logo');
+        $imgFolder = 'images';
+        $imgFile = time() . "_" . $file->getClientOriginalName();
+        $file->move($imgFolder, $imgFile);
+        $data->logo = $imgFile;
+
+
         $data->generic_name = $request->get('genericName');
         $data->form = $request->get('formula');
         $data->restriction_formula = $request->get('restrictionForm');
@@ -290,16 +298,17 @@ class MedicineController extends Controller
         return view('frontend.product', compact('medicine'));
     }
 
-    public function addToCart($id){
+    public function addToCart($id)
+    {
         $m = Medicine::find($id);
         $cart = session()->get('cart');
         if (!isset($cart[$id])) {
             $cart[$id] = [
-                "name" => $m ->generic_name,
+                "name" => $m->generic_name,
                 "quantity" => 1,
-                "price"=> $m ->price
+                "price" => $m->price
             ];
-        }else{
+        } else {
             $cart[$id]['quantity']++;
         }
         session()->put('cart', $cart);
@@ -307,7 +316,37 @@ class MedicineController extends Controller
         return redirect()->back()->with('success', 'Medicine Added to cart succesfully');
     }
 
-    public function cart(){
+    public function cart()
+    {
         return view('frontend.cart');
+    }
+
+    public function saveDataField(Request $request)
+    {
+        $id = $request->get('id');
+        $fname = $request->get('fname');
+        $value = $request->get('value');
+
+        // dd($fname . $id . $value);
+        $medicine = Medicine::find($id);
+        $medicine->$fname = $value;
+        $medicine->save();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'Medicine data updated'
+        ), 200);
+    }
+
+    public function changeLogo(Request $request)
+    {
+        $id = $request->get('id');
+        $file = $request->file('logo');
+        $imgFolder = 'images';
+        $imgFile = time() . "_" . $file->getClientOriginalName();
+        $file->move($imgFolder, $imgFile);
+        $medicine = Medicine::find($id);
+        $medicine->logo = $imgFile;
+        $medicine->save();
+        return redirect()->route('reportlistallmedicines')->with('status', 'Medicine logo is changed');
     }
 }

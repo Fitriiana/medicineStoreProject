@@ -83,9 +83,9 @@ class CategoryController extends Controller
 
         $file = $request->file('logo');
         $imgFolder = 'images';
-        $imgFile = time()."_".$file->getClientOriginalName();
-        $file -> move($imgFolder, $imgFile);
-        $data->logo=$imgFile;
+        $imgFile = time() . "_" . $file->getClientOriginalName();
+        $file->move($imgFolder, $imgFile);
+        $data->logo = $imgFile;
 
 
         $data->name = $request->get('nameCategory');
@@ -241,5 +241,18 @@ class CategoryController extends Controller
             'status' => 'oke',
             'msg' => 'Category data updated'
         ), 200);
+    }
+
+    public function changeLogo(Request $request)
+    {
+        $id = $request->get('id');
+        $file = $request->file('logo');
+        $imgFolder = 'images';
+        $imgFile = time() . "_" . $file->getClientOriginalName();
+        $file->move($imgFolder, $imgFile);
+        $category = Category::find($id);
+        $category->logo = $imgFile;
+        $category->save();
+        return redirect()->route('reportallcategory')->with('status', 'Category logo is changed');
     }
 }
